@@ -1,0 +1,17 @@
+<ul class="hm-menu">
+                                        <li class="hm-wishlist">
+                                            <a href="wishlist.html">
+                                                <span class="cart-item-count wishlist-item-count">0</span>
+                                                <i class="fa fa-heart-o"></i>
+                                            </a>
+                                        </li>
+
+                                        <li class="hm-wishlist">
+                                            <div class="hm-minicart-trigger">
+                                                <span>
+                                                    <span class="cart-item-count wishlist-item-count CartCount">0</span>
+                                                    <span class="item-icon sp"></span>
+                                                </span>
+                                            </div>
+                                        </li>
+                                    </ul>

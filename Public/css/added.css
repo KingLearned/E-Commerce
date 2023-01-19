@@ -1,0 +1,123 @@
+*{
+    scroll-behavior: smooth;
+}
+.li-static-banner{
+    margin-top: 30px;
+}
+.add-cart{
+    text-align: center;
+}
+.new-price{
+    font-weight: 900 !important;
+}
+.add-cart:hover{
+    cursor: pointer;
+}
+.minicart-product-details h6,.li-product-name,.cart-product-name{
+    font-size: smaller !important;
+}
+.product-review{
+    border-bottom: 1px solid gray;
+    height: 60px;
+}
+.Checkout{
+    background-color: lime;
+}
+.h2{
+    color: rgb(39, 188, 247);
+}
+.Checkout:hover{
+    background-color: gold;
+}
+.quick-view-btn{
+    cursor: pointer;
+}
+.fa-times:hover{
+    color: gold;
+    cursor: pointer;
+}
+.li-product-thumbnail img{
+    width: 50px;
+    height: 50px;
+}
+.sp{
+   color: white; 
+}
+
+.sticker{
+    z-index: 0 !important;
+}
+.soldout{
+    background-color: red !important;
+    color: white !important;
+    box-shadow: 1px 1px 4px gray !important;
+    font-weight: 400 !important;
+}
+
+
+.mt-40 img{
+    width: 100% !important;
+}
+@media screen and (max-width:500px) {
+    .mt-40{
+        width: 70%;
+        margin: auto;
+    }
+    
+}
+.mt-40:hover{
+    overflow: hidden;
+    box-shadow: 1px 1px 15px rgba(167, 165, 165, 0.404);
+    border-radius: 10px;
+    z-index: 99;
+}
+.product_desc_info ul{
+    margin-top: 5px;
+    padding: 10px 0;
+}
+
+orderid{
+    font:bold 22px roboto;
+    padding: 0 0 15px 0 ;
+    color: green;
+}
+
+/* Admin Side */
+.Adminbtn a{
+    text-transform: uppercase;
+    cursor: pointer;
+}
+.Adminbtn a:hover{
+    color: red !important;
+}
+.AdminEd{
+    color: rgb(97, 160, 4) !important;
+    cursor: pointer;
+    font-size: 18px !important;
+}
+.AdminEd:hover{
+    color: goldenrod !important;
+}
+.StockTot i:nth-child(2){
+    font: 500 20px cambria !important;
+    color: brown;
+}
+.RemovePro{
+    width: max-content !important;
+    padding: 0 7px !important;
+    background-color: red !important;
+    color: white;
+}
+.RemovePro:hover{
+    background-color: gold !important;
+    color: black;
+}
+.ErrorMsg,.Reg{
+    color: rgb(114, 2, 2);
+    /* margin: 0 0 10px 0; */
+    height: 10px;
+}
+.SignIn, .Register{
+    text-align: center;
+    cursor: pointer;
+}
