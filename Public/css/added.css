@@ -53,6 +53,12 @@
     box-shadow: 1px 1px 4px gray !important;
     font-weight: 400 !important;
 }
+.added{
+    background-color: greenyellow !important;
+    color: white !important;
+    box-shadow: 1px 1px 4px gray !important;
+    font-weight: 400 !important;
+}
 
 
 .mt-40 img{

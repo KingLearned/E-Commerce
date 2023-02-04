@@ -7,8 +7,8 @@
         const InitialQty = []
         const FullCart = document.querySelector('.shopping_cart tbody')
         FullCart.innerHTML = ''
-        setTimeout(() => {
-            function ShopCart(){
+        function ShopCart(){
+            // setTimeout(() => {
                 FullCart.innerHTML = ''
                 for (let i = 0; i < FullOrders.length; i++) {
                     InitialQty.push(FullOrders[i].Qty)
@@ -99,6 +99,7 @@
                     
                 }
 
+                //FOR REMOVING OF ORDERS FROM CART
                 for (let i = 0; i < FullOrders.length; i++) {
                     $(`.Rmv${FullOrders[i].Id}`).on('click', () => {
                         for (let n = 0; n < FullOrders.length; n++) {
@@ -126,14 +127,9 @@
                     })
                 }
 
-            }ShopCart()
-
-            
-        },1000)
-
-    setTimeout(() => { 
-        
-    }, 1000)
+                
+            // },1000)
+        }ShopCart()
     }
     
 

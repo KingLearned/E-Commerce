@@ -39,14 +39,30 @@ $.ajax({
                         </div>
                     </div>
                 </div>`
-                if(data.PRD[i].Qty <= 0){
-                    document.querySelector(`.${data.PRD[i].Id}`).classList.remove(`${data.PRD[i].Id}`)
-                } 
+            if(data.PRD[i].Qty <= 0){
+                document.querySelector(`.${data.PRD[i].Id}`).classList.remove(`${data.PRD[i].Id}`)
+            } 
+        }
+
+        //For Indicating Added Orders into Cart
+        for (let i = 0; i < CartHold.length; i++) {
+            for (let n = 0; n < data.PRD.length; n++) {
+                if(CartHold[i].Id == data.PRD[n].Id){
+                    document.querySelector(`.${CartHold[i].Id}`).classList.add('added')
+                    $('.added').html('Added')
+                }
+            }
         }
         $('.soldout').html('SOLD OUT')//For Sold Out Stocks
-             
-        /*****************      FOR MODAL VIEW FORMAT       ****************/
+
+
+        /********************   FOR ADDING OF ORDERS TO CARTHOLD    ********************/
         for (let i = 0; i < data.PRD.length; i++) {
+            $(`.${data.PRD[i].Id}`).on('click', () => {
+                Adder(CartHold,data.PRD[i].Id,data.PRD[i],data.PRD[i].Prc)
+            })
+
+        /********************      FOR MODAL VIEW FORMAT       ***********************/
             $(`.qv${data.PRD[i].Id}`).on('click', () => {
                 if(data.PRD[i].Qty <= 0){
                     document.querySelector('.add-to-cart').classList.add('soldout')
@@ -70,69 +86,11 @@ $.ajax({
 
             })
 
-            //For Adding Of Orders To CartHold
-            $(`.${data.PRD[i].Id}`).on('click', () => {
-                Adder(CartHold,data.PRD[i].Id,data.PRD[i],data.PRD[i].Prc)
-            })
-        }  
+        }
+
     }
 }) 
 
-/*************** FUNCTION FOR ADDING ORDERS TO CARTS *********************/
-if(localStorage.length == 0){
-    localStorage.setItem('Orders', JSON.stringify([]))
-}
-
-const Store = JSON.parse(localStorage.getItem('Orders')) //Local Storage Cart Holder
-
-for (let i = 0; i < Store.length; i++) {
-    c++
-    $('.CartCount').html(c)
-    CartTP += Store[i].Prc
-    $('.CartTprice').html(`N${(CartTP).toLocaleString()}`)
-    CartHold.push(Store[i])
-}
-
-function Adder(Main,Add,Addwhole,Addprc) {
-    const index = Main.findIndex(obj => obj.Id === Add)
-    if(index === -1){
-        Store.push(Addwhole)
-        localStorage.setItem('Orders',JSON.stringify(Store))
-
-        console.log(JSON.parse(localStorage.getItem('Orders')))
-
-        c++
-        $('.CartCount').html(c)
-        CartTP += Addprc
-        $('.CartTprice').html(`N${(CartTP).toLocaleString()}`)
-        Main.push(Addwhole)
-        
-        ViewCart() //View Cart Box Function
-    }
-}
-
-$('.clear_cart').on('click', () => {//CLEARING OF CARTS
-    localStorage.clear()
-    localStorage.setItem('Orders', JSON.stringify([]))
-    Store.length = 0
-
-    c = 0
-    $('.CartCount').html(c)
-    CartTP = 0
-    $('.CartTprice').html(`N00.00`)
-    $('.minicart-total span').html(`N00.00`)
-    CartHold.length = 0
-    ViewCart()
-})
-
-//PERFORM THIS FUCTION BEFORE GOING TO CHECK-OUT
-$('.Checkout').on('click', () => {  
-    const CheckOutOrder = []
-    for (let i = 0; i < CartHold.length; i++) {
-        CheckOutOrder.push({Id:CartHold[i].Id,Dscp:CartHold[i].Dscp,Prc:CartHold[i].Prc,Qty:1})
-    }
-    localStorage.setItem('CheckOrders', JSON.stringify(CheckOutOrder))
-})
 
 // function Adder(Main,Add,Addwhole,Addprc) {
 //     const index = Main.findIndex(obj => obj.Id === Add)
