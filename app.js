@@ -125,7 +125,7 @@ app.get('/verifyingPayment', async (req, res) => {
     const { CUSTOMERIN } = req.session
     const reference = req.query.reference
 
-    console.log(req.query.reference)
+    console.log(reference)
 
     try {
         const response = await paystackApi.verifyPayment(reference);
@@ -138,16 +138,17 @@ app.get('/verifyingPayment', async (req, res) => {
                 for (let i = 0; i < products.length; i++) {
                     const query = `SELECT * FROM ${products[i]}`
                     MYSQL.query(query, (err, StockUp) =>{
-                        for (let n = 0; n < StockUp.length; n++) {
-                            
-                            if(StockUp[n].Id == Purchased[m].Id){
-                                GnI++
-                                const query1 = `UPDATE ${products[i]} SET Qty=?, QtySold=? WHERE Id=?`
-                                MYSQL.query(query1, [StockUp[n].Qty-Number(Purchased[m].Qty), StockUp[n].QtySold+Number(Purchased[m].Qty), Purchased[m].Id], (err, result) =>{})
-                                const query = `INSERT INTO orders (orderid, customerid, item, qty, date) VALUES(?,?,?,?,?)`
-                                MYSQL.query(query, [`ORD${GnI}`, CUSTOMERIN, Purchased[m].Dscp, Number(Purchased[m].Qty), new Date().getTime()],(err, Laps) =>{})
+                        if(StockUp.length > 0){
+                            for (let n = 0; n < StockUp.length; n++) {
+                                if(StockUp[n].Id == Purchased[m].Id){
+                                    GnI++
+                                    const query1 = `UPDATE ${products[i]} SET Qty=?, QtySold=? WHERE Id=?`
+                                    MYSQL.query(query1, [StockUp[n].Qty-Number(Purchased[m].Qty), StockUp[n].QtySold+Number(Purchased[m].Qty), Purchased[m].Id], (err, result) =>{})
+                                    const query = `INSERT INTO orders (orderid, customerid, item, qty, date) VALUES(?,?,?,?,?)`
+                                    MYSQL.query(query, [`ORD${GnI}`, CUSTOMERIN, Purchased[m].Dscp, Number(Purchased[m].Qty), new Date().getTime()],(err, Laps) =>{})
+                                }
+    
                             }
-
                         }
                     })
                 }
@@ -180,6 +181,8 @@ app.post('/Check-Out', async (req,res) => { //CHECK OUT POST
 
         try { //Initializing of payment gate way for customer
             const response = await paystackApi.initiatePayment(totalPrc, userEmail, 'https://lxpurchase.onrender.com/verifyingPayment', Purchased)
+            // http://localhost:2000/Check-Out
+            // https://lxpurchase.onrender.com
             console.log(response.data)
             res.json({payLink:response.data.authorization_url}) //Unique URL for payment
             
