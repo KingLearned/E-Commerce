@@ -50,9 +50,9 @@ const { initiatePayment, verifyPayment } = require('./MODULES/Paystack')
 // **************** CONSTUME MIDDLE-WARES ****************//
 // **************** CONSTUME MIDDLE-WARES ****************//
 let ToCheckOut = ''
+
 const CHECKOUT = (req, res, next) => {
-    const { CUSTOMERIN, PAIDFEE } = req.session
-    console.log(CUSTOMERIN,PAIDFEE)
+    const { CUSTOMERIN } = req.session
     if(!CUSTOMERIN){
         res.redirect('/Login-Register')
         ToCheckOut = '/Check-Out'
@@ -81,6 +81,7 @@ app.get('/logout', (req, res) =>{
             return res.redirect('/')
         }
     })
+
 })
 
 /**************** HANDLING OF CATEGORY PAGE VIEW AND BUTTONS **********************/
@@ -102,15 +103,12 @@ for (let i = 0; i < router.length; i++) {
 app.get('/Account-Dashboard', (req,res) => {
     res.sendFile(PATH.join(__dirname,'./Public/index.html'))
 })
-
 app.get('/About-Lxpurchase', (req,res) => {
     res.sendFile(PATH.join(__dirname,'./Public/about-us.html'))
 })
-
 app.get('/Contact-Us', (req,res) => {
     res.sendFile(PATH.join(__dirname,'./Public/contact.html'))
 })
-
 app.get('/Whitelist', (req,res) => {
     res.sendFile(PATH.join(__dirname,'./Public/wishlist.html'))
 })
@@ -122,16 +120,18 @@ app.get('/Shopping-Cart', (req,res) => { //SHOPPING CART GET
 
 /**************   CHECK OUT FUNCTIONALITY     ****************/
 /**************   CHECK OUT FUNCTIONALITY     ****************/
-// const https = require('https')
+
 app.get('/verifyingPayment', async (req, res) => {
     const { CUSTOMERIN } = req.session
-    const reference = req.query.reference;
+    const reference = req.query.reference
+
+    console.log(req.query.reference)
 
     try {
         const response = await paystackApi.verifyPayment(reference);
         if (response.data.status === 'success') {
             const Purchased = response.data.metadata
-            req.session.paymentMade = 'paymentMade => True'
+            console.log(response.data.status, response.data.paidAt + `\n` + response.data.metadata)
             
             let GnI = Math.floor(new Date().getTime()/365)
             for (let m = 0; m < Purchased.length; m++) {
@@ -152,16 +152,16 @@ app.get('/verifyingPayment', async (req, res) => {
                     })
                 }
             }
-            res.redirect('/Check-out')
+
+            res.sendFile(PATH.join(__dirname,'./Public/comfirmPay.html'))
 
         } else {
             console.log('Payment failed')
         }
+        
     } catch (error) {
-        console.log(error.message);
+        console.log(error);
     }
-    req.session.PAIDFEE = 'True' 
-
 })
 
 app.get('/Check-Out', CHECKOUT, (req,res) => { //CHECK OUT GET
@@ -169,24 +169,24 @@ app.get('/Check-Out', CHECKOUT, (req,res) => { //CHECK OUT GET
 })
 
 app.post('/Check-Out', async (req,res) => { //CHECK OUT POST
-    const {userEmail, paymentMade } = req.session
+    const { userEmail } = req.session
     const {Purchased} = req.body
 
     let totalPrc = 0
 
     if(Purchased){
-        Purchased.forEach(eachPrc => {  totalPrc += Number(eachPrc.Prc * eachPrc.Qty) })
+
+        Purchased.forEach(eachProduct => {  totalPrc += Number(eachProduct.Prc * eachProduct.Qty) })
 
         try { //Initializing of payment gate way for customer
-
-            const response = await paystackApi.initiatePayment(totalPrc, userEmail, 'http://localhost:2000/verifyingPayment', Purchased)
+            const response = await paystackApi.initiatePayment(totalPrc, userEmail, 'https://lxpurchase.onrender.com/verifyingPayment', Purchased)
+            console.log(response.data)
             res.json({payLink:response.data.authorization_url}) //Unique URL for payment
             
-        } catch (error) { console.log(error) }
+        } catch (error) { console.log("NetWork Failure => " + error) }
 
-    }else{
-        res.json({paymentMade:paymentMade})
     }
+
 })
 
 
@@ -215,7 +215,6 @@ app.post('/', (req,res) => {
         })
     })
 })
-
 
 
 /**************   ADMINISTRATOR STOCK CREATION PAGE     ****************/

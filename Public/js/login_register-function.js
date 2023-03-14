@@ -42,3 +42,8 @@ $('.Register_Form').on('submit', (e) => {
         },
     })
 })
+
+const YourOder = JSON.parse(localStorage.getItem('CheckOrders'))//Check Out Order Cart Holder
+if(YourOder){
+    $('.CartCount').html(YourOder.length)//Display Number Of Items Bought, At Top Menu
+}

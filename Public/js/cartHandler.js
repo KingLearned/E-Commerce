@@ -18,7 +18,7 @@ for (let i = 0; i < Store.length; i++) {
     CartHold.push(Store[i])
 }
 
-function Adder(Main,Add,Addwhole,Addprc) {
+const Adder = (Main,Add,Addwhole,Addprc) => {
     const index = Main.findIndex(obj => obj.Id === Add)
     if(index === -1){
         Store.push(Addwhole)
@@ -34,7 +34,7 @@ function Adder(Main,Add,Addwhole,Addprc) {
         
         ViewCart() //View Cart Box Function
         document.querySelector(`.${Addwhole.Id}`).classList.add('added')
-        $('.added').html('Added')
+        $('.added').html('ADDED')
     }
 
 }

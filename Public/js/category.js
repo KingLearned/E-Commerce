@@ -2,6 +2,8 @@
 //     res => res.json()   
 // ).then(Result => {
 //     console.log(Result)
+
+
 // })
 $.ajax({
     method:"POST",
@@ -44,12 +46,12 @@ $.ajax({
             } 
         }
 
-        //For Indicating Added Orders into Cart
+        // For Indicating Added Orders into Cart
         for (let i = 0; i < CartHold.length; i++) {
             for (let n = 0; n < data.PRD.length; n++) {
                 if(CartHold[i].Id == data.PRD[n].Id){
                     document.querySelector(`.${CartHold[i].Id}`).classList.add('added')
-                    $('.added').html('Added')
+                    $('.added').html('ADDED')
                 }
             }
         }

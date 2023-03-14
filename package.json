@@ -1,14 +1,14 @@
 {
-  "name": "nodeclass",
-  "version": "1.0.0",
-  "description": "tutorial",
+  "name": "LxPurchase",
+  "version": "2.0.1",
+  "description": "E-Commerce",
   "main": "app.js",
   "scripts": {
     "start": "nodemon app",
     "dev": "node app"
   },
   "keywords": [],
-  "author": "Learneds",
+  "author": "LearnedsDigitalConcept",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.1",
