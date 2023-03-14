@@ -44,15 +44,20 @@ app.use(session({
 // ################ IMPORTED MODULES #################
 const MYSQL = require('./MODULES/Conn')
 
+const paystackApi = require('./MODULES/Paystack')
+const { initiatePayment, verifyPayment } = require('./MODULES/Paystack')
+
 // **************** CONSTUME MIDDLE-WARES ****************//
 // **************** CONSTUME MIDDLE-WARES ****************//
 let ToCheckOut = ''
 const CHECKOUT = (req, res, next) => {
-    
-    if(!req.session.CUSTOMERIN){
+    const { CUSTOMERIN, PAIDFEE } = req.session
+    console.log(CUSTOMERIN,PAIDFEE)
+    if(!CUSTOMERIN){
         res.redirect('/Login-Register')
         ToCheckOut = '/Check-Out'
     }else{
+
         next()
     }
 }
@@ -117,35 +122,73 @@ app.get('/Shopping-Cart', (req,res) => { //SHOPPING CART GET
 
 /**************   CHECK OUT FUNCTIONALITY     ****************/
 /**************   CHECK OUT FUNCTIONALITY     ****************/
+// const https = require('https')
+app.get('/verifyingPayment', async (req, res) => {
+    const { CUSTOMERIN } = req.session
+    const reference = req.query.reference;
+
+    try {
+        const response = await paystackApi.verifyPayment(reference);
+        if (response.data.status === 'success') {
+            const Purchased = response.data.metadata
+            req.session.paymentMade = 'paymentMade => True'
+            
+            let GnI = Math.floor(new Date().getTime()/365)
+            for (let m = 0; m < Purchased.length; m++) {
+                for (let i = 0; i < products.length; i++) {
+                    const query = `SELECT * FROM ${products[i]}`
+                    MYSQL.query(query, (err, StockUp) =>{
+                        for (let n = 0; n < StockUp.length; n++) {
+                            
+                            if(StockUp[n].Id == Purchased[m].Id){
+                                GnI++
+                                const query1 = `UPDATE ${products[i]} SET Qty=?, QtySold=? WHERE Id=?`
+                                MYSQL.query(query1, [StockUp[n].Qty-Number(Purchased[m].Qty), StockUp[n].QtySold+Number(Purchased[m].Qty), Purchased[m].Id], (err, result) =>{})
+                                const query = `INSERT INTO orders (orderid, customerid, item, qty, date) VALUES(?,?,?,?,?)`
+                                MYSQL.query(query, [`ORD${GnI}`, CUSTOMERIN, Purchased[m].Dscp, Number(Purchased[m].Qty), new Date().getTime()],(err, Laps) =>{})
+                            }
+
+                        }
+                    })
+                }
+            }
+            res.redirect('/Check-out')
+
+        } else {
+            console.log('Payment failed')
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+    req.session.PAIDFEE = 'True' 
+
+})
+
 app.get('/Check-Out', CHECKOUT, (req,res) => { //CHECK OUT GET
     res.sendFile(PATH.join(__dirname,'./Public/checkout.html'))
 })
-app.post('/Check-Out', CHECKOUT, (req,res) => { //CHECK OUT POST
-    const {CUSTOMERIN} = req.session
-    
-    const {Purchased} = req.body
-    if(Purchased){
-        var GnI = Math.floor(new Date().getTime()/365)
-        for (let m = 0; m < Purchased.length; m++) {
-            for (let i = 0; i < products.length; i++) {
-                const query = `SELECT * FROM ${products[i]}`
-                MYSQL.query(query, (err, StockUp) =>{
-                    for (let n = 0; n < StockUp.length; n++) {
-                        
-                        if(StockUp[n].Id == Purchased[m].Id){
-                            GnI++
-                            const query1 = `UPDATE ${products[i]} SET Qty=?, QtySold=? WHERE Id=?`
-                            MYSQL.query(query1, [StockUp[n].Qty-Number(Purchased[m].Qty), StockUp[n].QtySold+Number(Purchased[m].Qty), Purchased[m].Id], (err, result) =>{})
-                            const query = `INSERT INTO orders (orderid, customerid, item, qty, date) VALUES(?,?,?,?,?)`
-                            MYSQL.query(query, [`ORD${GnI}`, CUSTOMERIN, Purchased[m].Dscp, Number(Purchased[m].Qty), new Date().getTime()],(err, Laps) =>{})
-                        }
 
-                    }
-                })
-            }
-        }
-    } 
+app.post('/Check-Out', async (req,res) => { //CHECK OUT POST
+    const {userEmail, paymentMade } = req.session
+    const {Purchased} = req.body
+
+    let totalPrc = 0
+
+    if(Purchased){
+        Purchased.forEach(eachPrc => {  totalPrc += Number(eachPrc.Prc * eachPrc.Qty) })
+
+        try { //Initializing of payment gate way for customer
+
+            const response = await paystackApi.initiatePayment(totalPrc, userEmail, 'http://localhost:2000/verifyingPayment', Purchased)
+            res.json({payLink:response.data.authorization_url}) //Unique URL for payment
+            
+        } catch (error) { console.log(error) }
+
+    }else{
+        res.json({paymentMade:paymentMade})
+    }
 })
+
 
 
 /**************   HOME PAGE OR LANDING PAGE     ****************/
@@ -284,6 +327,7 @@ app.post('/Login-Register', LOGIN, (req,res) => {
             if(Result.length > 0){
                 if(Result[0].pwd == LogPwd){
                     req.session.CUSTOMERIN = Result[0].buyerid
+                    req.session.userEmail = LogEmail
                     res.json({valid:ToCheckOut})
                 }else{
                     res.json({Notify:'Invalid Password or Email!'})
