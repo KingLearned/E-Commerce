@@ -136,19 +136,30 @@ orderid{
     width: 100%;
     background-color: rgba(0, 0, 0, 0.675);
 }
-
+.text{
+    font-size: 150%;
+}
 .payGate-Way .main{
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
-    width: 50%;
+    width: 85%;
+    max-width: 350px;
     height: 80%;
     border-radius: 15px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 .main .fa-shopping-cart{
-    font-size: 200px !important;
+    font-size: 100px !important;
     color: black;
+}
+.backbtn{
+    width: 80%;
+    font-size: 12px;
 }

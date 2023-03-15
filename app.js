@@ -179,7 +179,7 @@ app.post('/Check-Out', async (req,res) => { //CHECK OUT POST
 
         Purchased.forEach(eachProduct => {  totalPrc += Number(eachProduct.Prc * eachProduct.Qty) })
 
-        try { //Initializing of payment gate way for customer
+        try { //Initializing of payment gate way for customer lxpurchase.onrender.com
             const response = await paystackApi.initiatePayment(totalPrc, userEmail, 'http://lxpurchase.onrender.com/verifyingPayment', Purchased)
             res.json({payLink:response.data.authorization_url}) //Unique URL for payment
             
@@ -357,4 +357,4 @@ app.post('/Login-Register', LOGIN, (req,res) => {
     }
 })
 
-app.listen(PORT, () => console.log(`Server Running on Port ${PORT}`))
+app.listen(PORT, () => {console.log(`Server Running on Port ${PORT}`)})
