@@ -125,24 +125,24 @@ app.get('/verifyingPayment', async (req, res) => {
     const { CUSTOMERIN } = req.session
     const reference = req.query.reference
 
-    console.log(reference)
-
     try {
-        const response = await paystackApi.verifyPayment(reference);
+        const response = await paystackApi.verifyPayment(reference)
+
         if (response.data.status === 'success') {
             const Purchased = response.data.metadata
-            console.log(response.data.status, response.data.paidAt + `\n` + response.data.metadata)
-            
+            const AllProducts = ['laptops','cameras','television','phones','homeapps']
             let GnI = Math.floor(new Date().getTime()/365)
+
             for (let m = 0; m < Purchased.length; m++) {
-                for (let i = 0; i < products.length; i++) {
-                    const query = `SELECT * FROM ${products[i]}`
+                for (let i = 0; i < AllProducts.length; i++) {
+
+                    const query = `SELECT * FROM ${AllProducts[i]}`
                     MYSQL.query(query, (err, StockUp) =>{
                         if(StockUp.length > 0){
                             for (let n = 0; n < StockUp.length; n++) {
                                 if(StockUp[n].Id == Purchased[m].Id){
                                     GnI++
-                                    const query1 = `UPDATE ${products[i]} SET Qty=?, QtySold=? WHERE Id=?`
+                                    const query1 = `UPDATE ${AllProducts[i]} SET Qty=?, QtySold=? WHERE Id=?`
                                     MYSQL.query(query1, [StockUp[n].Qty-Number(Purchased[m].Qty), StockUp[n].QtySold+Number(Purchased[m].Qty), Purchased[m].Id], (err, result) =>{})
                                     const query = `INSERT INTO orders (orderid, customerid, item, qty, date) VALUES(?,?,?,?,?)`
                                     MYSQL.query(query, [`ORD${GnI}`, CUSTOMERIN, Purchased[m].Dscp, Number(Purchased[m].Qty), new Date().getTime()],(err, Laps) =>{})
@@ -180,10 +180,7 @@ app.post('/Check-Out', async (req,res) => { //CHECK OUT POST
         Purchased.forEach(eachProduct => {  totalPrc += Number(eachProduct.Prc * eachProduct.Qty) })
 
         try { //Initializing of payment gate way for customer
-            const response = await paystackApi.initiatePayment(totalPrc, userEmail, 'https://lxpurchase.onrender.com/verifyingPayment', Purchased)
-            // http://localhost:2000/Check-Out
-            // https://lxpurchase.onrender.com
-            console.log(response.data)
+            const response = await paystackApi.initiatePayment(totalPrc, userEmail, 'http://lxpurchase.onrender.com/verifyingPayment', Purchased)
             res.json({payLink:response.data.authorization_url}) //Unique URL for payment
             
         } catch (error) { console.log("NetWork Failure => " + error) }
