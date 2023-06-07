@@ -18,7 +18,6 @@ const TWILIO = require('twilio')
 const dotenv = require('dotenv')
 dotenv.config()
 
-
 /*********************** SERVING STATIC FILES ******************/
 app.use(express.static(PATH.join(__dirname, './Public')))
 app.use(bodyparser.urlencoded({extended: true}))
