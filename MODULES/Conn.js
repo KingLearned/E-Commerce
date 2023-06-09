@@ -7,12 +7,14 @@ const SQL = require('mysql')
 //     database: 'lxpurchase'
 // })
 
+
 const MYSQL = SQL.createConnection({
     host: "Localhost",
     user: "root",
     password: 'Learned 1945',
     database: 'lxpurchase'
 })
+
 
 MYSQL.connect((err, result) => {
     if(err, result){
