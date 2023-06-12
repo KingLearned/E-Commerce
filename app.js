@@ -69,8 +69,6 @@ const LOGIN = (req, res, next) => {
     }
 }
 
-
-
 app.get('/logout', (req, res) =>{
     // destroy session && Clear cookies
     req.session.destroy((err) => {
