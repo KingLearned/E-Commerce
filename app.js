@@ -191,8 +191,8 @@ const pro = []
 // queryAllProducts.forEach(eachProduct => {
     const query = `SELECT * FROM ${queryAllProducts[0]}`
 const vim = MYSQL.query(query, (err, result) =>{
-       console.log(result)
-    })
+       return result
+})
 //     console.log(eachProduct)
 // });
 // console.log(pro)
