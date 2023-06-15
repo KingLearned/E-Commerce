@@ -189,13 +189,13 @@ app.get('/', (req,res) => {
 const queryAllProducts = ['laptops', 'television', 'phones', 'cameras', 'homeapps']
 const pro = []
 // queryAllProducts.forEach(eachProduct => {
-    const query = `SELECT * FROM ${eachProduct}`
-    MYSQL.query(query, (err, Result) =>{
-        pro.push(1)
+    const query = `SELECT * FROM ${queryAllProducts[0]}`
+const vim = MYSQL.query(query, (err, result) =>{
+       console.log(result)
     })
 //     console.log(eachProduct)
 // });
-console.log(pro)
+// console.log(pro)
 
 
 app.post('/', (req,res) => {
