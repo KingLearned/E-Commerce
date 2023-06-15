@@ -19,6 +19,7 @@ for (let i = 0; i < YourOder.length; i++) {
     $('.order-total .amount').html(`N${OrderAmt.toLocaleString()}`)
 }
 
+//for Default Display
 if(YourOder.length == 0){
     PlacedOrder.innerHTML = `
     <tr class="cart_item">

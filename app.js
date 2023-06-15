@@ -119,6 +119,23 @@ app.get('/Shopping-Cart', (req,res) => { //SHOPPING CART GET
 
 /**************   CHECK OUT FUNCTIONALITY     ****************/
 /**************   CHECK OUT FUNCTIONALITY     ****************/
+app.get('/Check-Out', CHECKOUT, (req,res) => { res.sendFile(PATH.join(__dirname,'./Public/checkout.html')) })
+app.post('/Check-Out', async (req,res) => {
+    const { userEmail } = req.session
+    const {Purchased} = req.body
+
+    let totalPrc = 0
+
+    if(Purchased){
+        Purchased.forEach(eachProduct => {  totalPrc += Number(eachProduct.Prc * eachProduct.Qty) })
+
+        try { //Initializing of payment gate way for customer lxpurchase.onrender.com
+            const response = await paystackApi.initiatePayment(totalPrc, userEmail, 'http://lxpurchase.onrender.com/verifyingPayment', Purchased)
+            res.json({payLink:response.data.authorization_url}) //Unique URL for payment
+            
+        } catch (error) { console.log("NetWork Failure => " + error) }
+    }
+})
 
 app.get('/verifyingPayment', async (req, res) => {
     const { CUSTOMERIN } = req.session
@@ -163,31 +180,6 @@ app.get('/verifyingPayment', async (req, res) => {
         console.log(error);
     }
 })
-
-app.get('/Check-Out', CHECKOUT, (req,res) => { //CHECK OUT GET
-    res.sendFile(PATH.join(__dirname,'./Public/checkout.html'))
-})
-
-app.post('/Check-Out', async (req,res) => { //CHECK OUT POST
-    const { userEmail } = req.session
-    const {Purchased} = req.body
-
-    let totalPrc = 0
-
-    if(Purchased){
-
-        Purchased.forEach(eachProduct => {  totalPrc += Number(eachProduct.Prc * eachProduct.Qty) })
-
-        try { //Initializing of payment gate way for customer lxpurchase.onrender.com
-            const response = await paystackApi.initiatePayment(totalPrc, userEmail, 'http://lxpurchase.onrender.com/verifyingPayment', Purchased)
-            res.json({payLink:response.data.authorization_url}) //Unique URL for payment
-            
-        } catch (error) { console.log("NetWork Failure => " + error) }
-
-    }
-
-})
-
 
 
 /**************   HOME PAGE OR LANDING PAGE     ****************/
