@@ -181,20 +181,21 @@ app.get('/verifyingPayment', async (req, res) => {
     }
 })
 
-
 /**************   HOME PAGE OR LANDING PAGE     ****************/
 /**************   HOME PAGE OR LANDING PAGE     ****************/
 app.get('/', (req,res) => {
     res.sendFile(PATH.join(__dirname,'./Public/index.html'))
 })
 const queryAllProducts = ['laptops', 'television', 'phones', 'cameras', 'homeapps']
-
+const pro = []
 // queryAllProducts.forEach(eachProduct => {
-//     const query = `SELECT * FROM ${eachProduct}`
-//     MYSQL.query(query, (err, Result) =>{})
+    const query = `SELECT * FROM ${eachProduct}`
+    MYSQL.query(query, (err, Result) =>{
+        pro.push(1)
+    })
 //     console.log(eachProduct)
 // });
-
+console.log(pro)
 
 
 app.post('/', (req,res) => {
