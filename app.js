@@ -187,7 +187,18 @@ app.get('/verifyingPayment', async (req, res) => {
 app.get('/', (req,res) => {
     res.sendFile(PATH.join(__dirname,'./Public/index.html'))
 })
+const queryAllProducts = ['laptops', 'television', 'phones', 'cameras', 'homeapps']
+
+// queryAllProducts.forEach(eachProduct => {
+//     const query = `SELECT * FROM ${eachProduct}`
+//     MYSQL.query(query, (err, Result) =>{})
+//     console.log(eachProduct)
+// });
+
+
+
 app.post('/', (req,res) => {
+    const queryAllProducts = ['laptops', 'television', 'phones', 'cameras', 'homeapps']
     
     const query = "SELECT * FROM `laptops`"
     MYSQL.query(query, (err, Laps) =>{
@@ -205,6 +216,7 @@ app.post('/', (req,res) => {
             })
         })
     })
+
 })
 
 
