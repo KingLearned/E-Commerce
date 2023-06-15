@@ -195,7 +195,7 @@ const vim = MYSQL.query(query, (err, result) =>{
 })
 //     console.log(eachProduct)
 // });
-console.log(vim)
+console.log(vim._results)
 
 
 app.post('/', (req,res) => {
