@@ -193,12 +193,6 @@ const pro = []
 const vim = MYSQL.query(query, (err, result) =>{
        return result
 })
-//     console.log(eachProduct)
-// });
-for(key in vim._connection){
-    console.log(key)
-}
-// console.log(vim._connection)
 
 
 app.post('/', (req,res) => {
