@@ -186,11 +186,6 @@ app.get('/verifyingPayment', async (req, res) => {
 app.get('/', (req,res) => {
     res.sendFile(PATH.join(__dirname,'./Public/index.html'))
 })
-const queryAllProducts = ['laptops', 'television', 'phones', 'cameras', 'homeapps']
-const pro = []
-// queryAllProducts.forEach(eachProduct => {
-    const query = `SELECT * FROM ${queryAllProducts[0]}`
-
 
 app.post('/', (req,res) => {
     const queryAllProducts = ['laptops', 'television', 'phones', 'cameras', 'homeapps']
