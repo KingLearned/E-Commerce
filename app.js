@@ -209,8 +209,6 @@ app.post('/', (req,res) => {
 
 })
 
-
-/**************   ADMINISTRATOR STOCK CREATION PAGE     ****************/
 /**************   ADMINISTRATOR STOCK CREATION PAGE    ****************/
 app.get('/Admin-Select-Stock-Category', (req,res) => {
     res.sendFile(PATH.join(__dirname,'./Public/stockcategory.html'))
