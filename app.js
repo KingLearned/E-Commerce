@@ -190,9 +190,6 @@ const queryAllProducts = ['laptops', 'television', 'phones', 'cameras', 'homeapp
 const pro = []
 // queryAllProducts.forEach(eachProduct => {
     const query = `SELECT * FROM ${queryAllProducts[0]}`
-const vim = MYSQL.query(query, (err, result) =>{
-       return result
-})
 
 
 app.post('/', (req,res) => {
