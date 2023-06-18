@@ -7,6 +7,8 @@ const SQL = require('mysql')
 //     database: 'lxpurchase'
 // })
 
+
+
 const MYSQL = SQL.createConnection({
     host: "Localhost",
     user: "root",
