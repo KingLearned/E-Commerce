@@ -23,5 +23,4 @@ MYSQL.connect((err, result) => {
 })
 
 
-
 module.exports = MYSQL
