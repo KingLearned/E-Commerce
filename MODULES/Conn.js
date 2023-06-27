@@ -1,9 +1,9 @@
 const SQL = require('mysql')
  
 const MYSQL = SQL.createConnection({
-    host: "Localhost" || "db4free.net",
-    user: "root" || "learnedsconcept",
-    password: "Learned 1945" || "m94jC6bS3Xp!2LR",
+    host: "db4free.net",
+    user: "learnedsconcept",
+    password: "m94jC6bS3Xp!2LR",
     database: 'lxpurchase'
 })
 
